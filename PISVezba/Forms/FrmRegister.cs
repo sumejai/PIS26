@@ -67,8 +67,7 @@ namespace PISVezba.Forms
                     using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn))
                     {
                         insertCmd.Parameters.AddWithValue("@korisnicko_ime", username);
-                        insertCmd.Parameters.AddWithValue("@lozinka", password); // Napomena: U ozbiljnim aplikacijama lozinka se hešira!
-
+                        insertCmd.Parameters.AddWithValue("@lozinka", password); 
                         insertCmd.ExecuteNonQuery();
 
                         MessageBox.Show("Uspešna registracija! Možete se prijaviti.", "Uspeh", MessageBoxButtons.OK, MessageBoxIcon.Information);
