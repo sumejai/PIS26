@@ -21,23 +21,43 @@ namespace PISVezba.Forms
 
         private void FrmRegister_Load(object sender, EventArgs e)
         {
-
+            cmbRola.SelectedIndex = 0;
         }
 
         private void txtUsername_TextChanged(object sender, EventArgs e)
         {
 
         }
+        private void PrikaziLogin()
+        {
+            Form login = Application.OpenForms.Cast<Form>().FirstOrDefault(f => f is FrmLogin);
+
+            if (login == null)
+                login = new FrmLogin();
+
+            login.Show();
+            login.BringToFront();
+            login.Activate();
+        }
 
         private void btnRegister_Click(object sender, EventArgs e)
         {
             string username = txtUsername.Text.Trim();
-            string password = txtPassword.Text.Trim();
+            string password = txtPassword.Text;
+            string password2 = txtPassword2.Text;
+            string rola = cmbRola.Text;
 
-            // Osnovna validacija unosa
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(password2))
             {
                 MessageBox.Show("Molimo popunite sva polja.", "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (password != password2)
+            {
+                MessageBox.Show("Lozinke se ne poklapaju.", "Upozorenje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPassword2.Clear();
+                txtPassword2.Focus();
                 return;
             }
 
@@ -47,7 +67,6 @@ namespace PISVezba.Forms
                 {
                     conn.Open();
 
-                    // 1. Provera da li korisničko ime već postoji u bazi
                     string checkQuery = "SELECT COUNT(1) FROM korisnik WHERE korisnicko_ime = @korisnicko_ime";
                     using (MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn))
                     {
@@ -62,22 +81,19 @@ namespace PISVezba.Forms
                         }
                     }
 
-                    // 2. Unos novog korisnika u bazu
-                    string insertQuery = "INSERT INTO korisnik (korisnicko_ime, lozinka) VALUES (@korisnicko_ime, @lozinka)";
+                    string insertQuery = "INSERT INTO korisnik (korisnicko_ime, lozinka, rola) VALUES (@korisnicko_ime, @lozinka, @rola)";
                     using (MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn))
                     {
                         insertCmd.Parameters.AddWithValue("@korisnicko_ime", username);
-                        insertCmd.Parameters.AddWithValue("@lozinka", password); 
+                        insertCmd.Parameters.AddWithValue("@lozinka", password);
+                        insertCmd.Parameters.AddWithValue("@rola", rola);
                         insertCmd.ExecuteNonQuery();
-
-                        MessageBox.Show("Uspešna registracija! Možete se prijaviti.", "Uspeh", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Vraćanje na login formu
-                        FrmLogin frmLogin = new FrmLogin();
-                        frmLogin.Show();
-                        this.Close();
                     }
                 }
+
+                MessageBox.Show("Uspešna registracija! Možete se prijaviti.", "Uspeh", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                PrikaziLogin();
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -87,9 +103,24 @@ namespace PISVezba.Forms
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            FrmLogin frmLogin = new FrmLogin();
-            frmLogin.Show();
+            PrikaziLogin();
             this.Close();
+
+        }
+
+        private void lblNaslov_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void FrmRegister_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            PrikaziLogin();
         }
     }
 }
