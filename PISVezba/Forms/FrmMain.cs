@@ -16,5 +16,10 @@ namespace PISVezba.Forms
         {
             InitializeComponent();
         }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

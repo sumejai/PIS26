@@ -221,6 +221,7 @@
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Hotelski smeštaj";
+            this.Load += new System.EventHandler(this.FrmMain_Load);
             this.pnlMeni.ResumeLayout(false);
             this.pnlGore.ResumeLayout(false);
             this.pnlGore.PerformLayout();
