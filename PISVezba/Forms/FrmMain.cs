@@ -74,6 +74,7 @@ namespace PISVezba.Forms
         private void btnSobe_Click(object sender, EventArgs e)
         {
             Aktiviraj(btnSobe, "Sobe");
+            OtvoriFormu(new FrmSobe());
         }
 
         private void btnGosti_Click(object sender, EventArgs e)
